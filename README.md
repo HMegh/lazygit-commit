@@ -1,6 +1,6 @@
 # lazygit-aicommit
 
-GitHub Copilot commit messages for lazygit using OAuth device flow.
+A very minimal script to generate commit message with GitHub Copilot from lazygit, inspired by [lazycommit](https://github.com/Hamxter/lazycommit). 
 
 ## Nix
 
@@ -16,7 +16,7 @@ Import the Home Manager module:
 { inputs, ... }:
 {
   imports = [ inputs.lazygit-aicommit.homeManagerModules.default ];
-  programs."lazygit-aicommit".enable = true;
+  programs.lazygit-aicommit.enable = true;
 }
 ```
 
@@ -27,13 +27,8 @@ This installs `lazygit-aicommit`, enables lazygit, and adds:
 
 ## Usage
 
-Start authentication from lazygit with `Ctrl+G`, or run:
-
-```sh
-lazygit-aicommit login
-```
-
-Stage changes in lazygit, then press `Ctrl+U` to generate a Conventional
+- Start authentication from lazygit with `Ctrl+G`. 
+- Stage changes in lazygit, then press `Ctrl+U` to generate a Conventional
 Commits message with GitHub Copilot.
 
 Authentication data is stored under `${XDG_STATE_HOME:-$HOME/.local/state}`.
