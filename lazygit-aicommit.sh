@@ -98,7 +98,7 @@ generate() {
   diff=$(git diff --cached --no-ext-diff)
   history=$(git log -5 --oneline 2>/dev/null || true)
   prompt=$(printf '%s\n\nRecent commits:\n%s\n\nStaged diff:\n%s\n' \
-    'Write one Conventional Commits message for the staged changes below.' \
+    'Write one Conventional Commits message for the staged changes below. Return only the subject line. Do not use Markdown or code fences.' \
     "$history" "${diff:0:12000}")
   payload=$(jq -nc --arg model "${LAZYGIT_AICOMMIT_MODEL:-gpt-4o-mini}" --arg content "$prompt" \
     '{model: $model, messages: [{role: "user", content: $content}], max_tokens: 100, temperature: 0.2}')
@@ -111,6 +111,7 @@ generate() {
     -H 'Openai-Intent: conversation-panel' \
     -d "$payload") || die 'Copilot request failed'
   message=$(jq -r '.choices[0].message.content // empty |
+    gsub("```[[:alpha:]]*"; "") |
     gsub("[\\r\\n]+"; " ") |
     gsub("[\\\"\\u0027\\u0024\\u0060;|&<>]"; "") |
     gsub("^[[:space:]]+|[[:space:]]+$"; "")' <<<"$response")
