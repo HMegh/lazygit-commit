@@ -1,4 +1,4 @@
-# aicommit
+# lazygit-aicommit
 
 GitHub Copilot commit messages for lazygit using OAuth device flow.
 
@@ -7,7 +7,7 @@ GitHub Copilot commit messages for lazygit using OAuth device flow.
 Add the flake input:
 
 ```nix
-inputs.aicommit.url = "github:HMegh/lazygit-commit";
+inputs.lazygit-aicommit.url = "github:HMegh/lazygit-aicommit";
 ```
 
 Import the Home Manager module:
@@ -15,12 +15,12 @@ Import the Home Manager module:
 ```nix
 { inputs, ... }:
 {
-  imports = [ inputs.aicommit.homeManagerModules.default ];
-  programs.aicommit.enable = true;
+  imports = [ inputs.lazygit-aicommit.homeManagerModules.default ];
+  programs."lazygit-aicommit".enable = true;
 }
 ```
 
-This installs `aicommit`, enables lazygit, and adds:
+This installs `lazygit-aicommit`, enables lazygit, and adds:
 
 - `Ctrl+U` in the files view: generate and select a commit message
 - `Ctrl+G` globally: log in, log out, or check authentication status
@@ -30,7 +30,7 @@ This installs `aicommit`, enables lazygit, and adds:
 Start authentication from lazygit with `Ctrl+G`, or run:
 
 ```sh
-aicommit login
+lazygit-aicommit login
 ```
 
 Stage changes in lazygit, then press `Ctrl+U` to generate a Conventional

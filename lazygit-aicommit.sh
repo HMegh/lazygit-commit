@@ -2,14 +2,14 @@
 set -euo pipefail
 
 readonly client_id="Iv1.b507a08c87ecfe98"
-readonly state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/lazygit-commit"
+readonly state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/lazygit-aicommit"
 readonly auth_file="$state_dir/auth.json"
 readonly copilot_url="https://api.githubcopilot.com/chat/completions"
 readonly token_url="https://api.github.com/copilot_internal/v2/token"
 readonly device_url="https://github.com/login/device/code"
 readonly access_url="https://github.com/login/oauth/access_token"
 
-die() { printf 'aicommit: %s\n' "$*" >&2; exit 1; }
+die() { printf 'lazygit-aicommit: %s\n' "$*" >&2; exit 1; }
 
 for command in curl jq git; do
   command -v "$command" >/dev/null || die "missing dependency: $command"
@@ -49,7 +49,7 @@ copilot_token() {
   expires=$(auth_get copilot_expires)
   now=$(date +%s)
   if [[ -z "$token" || "${expires:-0}" -le $((now + 60)) ]]; then
-    [[ -n "$(auth_get github_token)" ]] || die 'run: aicommit login'
+    [[ -n "$(auth_get github_token)" ]] || die 'run: lazygit-aicommit login'
     refresh_token
     token=$(auth_get copilot_token)
   fi
@@ -100,7 +100,7 @@ generate() {
   prompt=$(printf '%s\n\nRecent commits:\n%s\n\nStaged diff:\n%s\n' \
     'Write one Conventional Commits message for the staged changes below.' \
     "$history" "${diff:0:12000}")
-  payload=$(jq -nc --arg model "${AICOMMIT_MODEL:-gpt-4o-mini}" --arg content "$prompt" \
+  payload=$(jq -nc --arg model "${LAZYGIT_AICOMMIT_MODEL:-gpt-4o-mini}" --arg content "$prompt" \
     '{model: $model, messages: [{role: "user", content: $content}], max_tokens: 100, temperature: 0.2}')
   response=$(curl -fsS "$copilot_url" -X POST \
     -H 'Content-Type: application/json' \
